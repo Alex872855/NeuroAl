@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NeuroAI — Искусственный интеллект</title>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #0b1020;
+  color: #fff;
+}
+header {
+  height: 70px;
+  padding: 15px 22px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 1px solid #263149;
+}
+.logo {
+  background: #2563eb;
+  padding: 10px 14px;
+  border-radius: 12px;
+  font-size: 22px;
+  font-weight: bold;
+}
+main {
+  max-width: 760px;
+  margin: 65px auto;
+  padding: 20px;
+}
+h1 { text-align: center; font-size: 32px; }
+.subtitle {
+  text-align: center;
+  color: #94a3b8;
+  margin-bottom: 45px;
+}
+#chat {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  min-height: 180px;
+}
+.message {
+  padding: 15px;
+  border-radius: 14px;
+  line-height: 1.5;
+  max-width: 90%;
+  white-space: pre-wrap;
+}
+.bot { background: #1e293b; align-self: flex-start; }
+.user { background: #2563eb; align-self: flex-end; }
+form {
+  display: flex;
+  gap: 10px;
+  margin-top: 25px;
+  background: #1e293b;
+  padding: 10px;
+  border-radius: 15px;
+}
+input {
+  flex: 1;
+  min-width: 0;
+  background: transparent;
+  border: 0;
+  outline: 0;
+  color: white;
+  font-size: 16px;
+  padding: 10px;
+}
+button {
+  background: #2563eb;
+  color: white;
+  border: 0;
+  border-radius: 10px;
+  padding: 12px 18px;
+  font-size: 16px;
+}
+footer {
+  text-align: center;
+  color: #64748b;
+  margin-top: 35px;
+  font-size: 13px;
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">N</div>
+  <div>
+    <strong>NeuroAI</strong><br>
+    <small style="color:#94a3b8">Интеллектуальный помощник</small>
+  </div>
+</header>
+<main>
+  <h1>Чем могу помочь?</h1>
+  <p class="subtitle">Ваш персональный интеллектуальный помощник</p>
+  <div id="chat">
+    <div class="message bot">
+      Здравствуйте! Я NeuroAI. Готов помочь вам с вопросами, задачами и идеями.
+    </div>
+  </div>
+  <form id="form">
+    <input id="message" placeholder="Напишите сообщение..." autocomplete="off">
+    <button type="submit">➤</button>
+  </form>
+  <footer>NeuroAI · Ваш интеллектуальный помощник</footer>
+</main>
+<script>
+const form = document.getElementById('form');
+const input = document.getElementById('message');
+const chat = document.getElementById('chat');
+
+form.addEventListener('submit', function(e) {
+  e.preventDefault();
+  const text = input.value.trim();
+  if (!text) return;
+
+  const msg = document.createElement('div');
+  msg.className = 'message user';
+  msg.textContent = text;
+  chat.appendChild(msg);
+
+  const reply = document.createElement('div');
+  reply.className = 'message bot';
+  reply.textContent = 'Сообщение получено! Искусственный интеллект будет подключён на следующем этапе.';
+  chat.appendChild(reply);
+
+  input.value = '';
+  window.scrollTo(0, document.body.scrollHeight);
+});
+</script>
+</body>
+</html>
