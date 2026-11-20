@@ -3,135 +3,229 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NeuroAI — Искусственный интеллект</title>
+<title>NeuroAI — Gemma</title>
+
 <style>
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
   font-family: Arial, sans-serif;
-  background: #0b1020;
-  color: #fff;
-}
-header {
-  height: 70px;
-  padding: 15px 22px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  border-bottom: 1px solid #263149;
-}
-.logo {
-  background: #2563eb;
-  padding: 10px 14px;
-  border-radius: 12px;
-  font-size: 22px;
-  font-weight: bold;
-}
-main {
-  max-width: 760px;
-  margin: 65px auto;
-  padding: 20px;
-}
-h1 { text-align: center; font-size: 32px; }
-.subtitle {
-  text-align: center;
-  color: #94a3b8;
-  margin-bottom: 45px;
-}
-#chat {
+  background: #10131b;
+  color: white;
+  height: 100vh;
   display: flex;
   flex-direction: column;
-  gap: 15px;
-  min-height: 180px;
 }
+
+header {
+  padding: 20px;
+  text-align: center;
+  font-size: 25px;
+  font-weight: bold;
+  color: #83b5ff;
+  border-bottom: 1px solid #303746;
+}
+
+#chat {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  width: 100%;
+  max-width: 850px;
+  margin: auto;
+}
+
 .message {
-  padding: 15px;
+  padding: 14px 17px;
   border-radius: 14px;
-  line-height: 1.5;
-  max-width: 90%;
+  margin: 12px 0;
+  max-width: 85%;
+  line-height: 1.6;
   white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
-.bot { background: #1e293b; align-self: flex-start; }
-.user { background: #2563eb; align-self: flex-end; }
-form {
+
+.user {
+  background: #2858a8;
+  margin-left: auto;
+}
+
+.bot {
+  background: #252d3b;
+  margin-right: auto;
+}
+
+#form {
   display: flex;
   gap: 10px;
-  margin-top: 25px;
-  background: #1e293b;
-  padding: 10px;
-  border-radius: 15px;
+  padding: 15px;
+  max-width: 850px;
+  width: 100%;
+  margin: auto;
 }
+
 input {
   flex: 1;
   min-width: 0;
-  background: transparent;
-  border: 0;
-  outline: 0;
+  padding: 15px;
+  border-radius: 12px;
+  border: 1px solid #424c60;
+  background: #202735;
   color: white;
   font-size: 16px;
-  padding: 10px;
 }
+
 button {
-  background: #2563eb;
+  padding: 0 22px;
+  border: none;
+  border-radius: 12px;
+  background: #3979dc;
   color: white;
-  border: 0;
-  border-radius: 10px;
-  padding: 12px 18px;
-  font-size: 16px;
+  font-size: 18px;
+  cursor: pointer;
 }
+
+button:disabled {
+  opacity: 0.5;
+}
+
 footer {
   text-align: center;
-  color: #64748b;
-  margin-top: 35px;
-  font-size: 13px;
+  color: #8993a5;
+  font-size: 12px;
+  padding: 12px;
 }
 </style>
 </head>
+
 <body>
+
 <header>
-  <div class="logo">N</div>
-  <div>
-    <strong>NeuroAI</strong><br>
-    <small style="color:#94a3b8">Интеллектуальный помощник</small>
+  🧠 NeuroAI
+  <div style="font-size:13px;font-weight:normal;margin-top:5px">
+    Powered by Gemma 4
   </div>
 </header>
-<main>
-  <h1>Чем могу помочь?</h1>
-  <p class="subtitle">Ваш персональный интеллектуальный помощник</p>
-  <div id="chat">
-    <div class="message bot">
-      Здравствуйте! Я NeuroAI. Готов помочь вам с вопросами, задачами и идеями.
-    </div>
+
+<div id="chat">
+  <div class="message bot">
+    Здравствуйте! Я NeuroAI на базе Gemma 4.
+    Чем могу помочь?
   </div>
-  <form id="form">
-    <input id="message" placeholder="Напишите сообщение..." autocomplete="off">
-    <button type="submit">➤</button>
-  </form>
-  <footer>NeuroAI · Ваш интеллектуальный помощник</footer>
-</main>
+</div>
+
+<form id="form">
+  <input
+    id="input"
+    placeholder="Напишите сообщение..."
+    autocomplete="off"
+  >
+  <button id="send" type="submit">➤</button>
+</form>
+
+<footer>
+  NeuroAI · Искусственный интеллект Gemma
+</footer>
+
 <script>
-const form = document.getElementById('form');
-const input = document.getElementById('message');
-const chat = document.getElementById('chat');
+const API =
+  "https://alex-thinkcentre-m92p.tail52eea9.ts.net";
 
-form.addEventListener('submit', function(e) {
-  e.preventDefault();
+const MODEL = "Librellama/gemma4:e2b-Uncensored";
+
+const chat = document.getElementById("chat");
+const form = document.getElementById("form");
+const input = document.getElementById("input");
+const send = document.getElementById("send");
+
+const messages = [
+  {
+    role: "system",
+    content:
+      "Ты NeuroAI — умный, дружелюбный и полезный ИИ-помощник. Отвечай на русском языке, подробно и понятно."
+  }
+];
+
+function addMessage(text, type) {
+  const div = document.createElement("div");
+  div.className = "message " + type;
+  div.textContent = text;
+  chat.appendChild(div);
+  chat.scrollTop = chat.scrollHeight;
+  return div;
+}
+
+form.addEventListener("submit", async function(event) {
+  event.preventDefault();
+
   const text = input.value.trim();
-  if (!text) return;
 
-  const msg = document.createElement('div');
-  msg.className = 'message user';
-  msg.textContent = text;
-  chat.appendChild(msg);
+  if (!text || send.disabled) return;
 
-  const reply = document.createElement('div');
-  reply.className = 'message bot';
-  reply.textContent = 'Сообщение получено! Искусственный интеллект будет подключён на следующем этапе.';
-  chat.appendChild(reply);
+  addMessage(text, "user");
 
-  input.value = '';
-  window.scrollTo(0, document.body.scrollHeight);
+  input.value = "";
+  input.disabled = true;
+  send.disabled = true;
+
+  messages.push({
+    role: "user",
+    content: text
+  });
+
+  const waiting = addMessage(
+    "Gemma думает...",
+    "bot"
+  );
+
+  try {
+    const response = await fetch(API + "/api/chat", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        model: MODEL,
+        messages: messages,
+        stream: false
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error(
+        "Ошибка сервера: " + response.status
+      );
+    }
+
+    const data = await response.json();
+
+    const answer =
+      data.message.content || "Пустой ответ модели.";
+
+    waiting.textContent = answer;
+
+    messages.push({
+      role: "assistant",
+      content: answer
+    });
+
+  } catch (error) {
+    waiting.textContent =
+      "Не удалось подключиться к Gemma.\n\n" +
+      error.message +
+      "\n\nПроверьте подключение Tailscale и работу компьютера.";
+
+    messages.pop();
+  }
+
+  input.disabled = false;
+  send.disabled = false;
+  input.focus();
 });
 </script>
+
 </body>
 </html>
